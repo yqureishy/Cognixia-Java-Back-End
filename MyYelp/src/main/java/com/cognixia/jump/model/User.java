@@ -1,7 +1,10 @@
 package com.cognixia.jump.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User implements Serializable {
@@ -35,18 +39,24 @@ public class User implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Review> reviews;
 
-	public User(Long id, String username, String password, String email, Role role) {
+	
+	
+	public User(Long id, String username, String password, String email, Role role, List<Review> reviews) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.role = role;
+		this.reviews = reviews;
 	}
-	
+
 	public User() {
-		this(-1L, "N/A", "N/A", "N/A", Role.ROLE_USER);
+		this(-1L, "N/A", "N/A", "N/A", Role.ROLE_USER, new ArrayList<>());
 	}
 
 	public Long getId() {
@@ -87,6 +97,15 @@ public class User implements Serializable {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+	
+
+	public List<Review> getReviews() {
+		return reviews;
+	}
+
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 
 	@Override
