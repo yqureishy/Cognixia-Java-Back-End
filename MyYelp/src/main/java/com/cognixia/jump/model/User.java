@@ -33,6 +33,9 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private String password;
 	
+	@Column(columnDefinition = "boolean default true")
+	private boolean enabled;
+	
 	@Column(unique = true, nullable = false)
 	private String email;
 	
@@ -45,18 +48,19 @@ public class User implements Serializable {
 
 	
 	
-	public User(Long id, String username, String password, String email, Role role, List<Review> reviews) {
+	public User(Long id, String username, String password, boolean enabled, String email, Role role, List<Review> reviews) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.enabled = enabled;
 		this.email = email;
 		this.role = role;
 		this.reviews = reviews;
 	}
 
 	public User() {
-		this(-1L, "N/A", "N/A", "N/A", Role.ROLE_USER, new ArrayList<>());
+		this(-1L, "N/A", "N/A", false, "N/A", Role.ROLE_USER, new ArrayList<>());
 	}
 
 	public Long getId() {
@@ -81,6 +85,14 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public String getEmail() {
@@ -110,9 +122,11 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", role="
-				+ role + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
+				+ ", email=" + email + ", role=" + role + ", reviews=" + reviews + "]";
 	}
+
+	
 	
 	
 	
