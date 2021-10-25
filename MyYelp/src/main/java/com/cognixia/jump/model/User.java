@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class User implements Serializable {
 
@@ -44,6 +46,7 @@ public class User implements Serializable {
 	private Role role;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonManagedReference   //new
 	private List<Review> reviews;
 
 	
