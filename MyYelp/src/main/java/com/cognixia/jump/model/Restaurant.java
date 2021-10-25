@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,7 @@ public class Restaurant implements Serializable{
 
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	
@@ -40,8 +41,7 @@ public class Restaurant implements Serializable{
 	private Double rating;
 	
 	
-	@OneToMany
-	@JoinColumn(name = "review_id", referencedColumnName = "id")
+	@OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
 	private List<Review> reviews;
 
 
