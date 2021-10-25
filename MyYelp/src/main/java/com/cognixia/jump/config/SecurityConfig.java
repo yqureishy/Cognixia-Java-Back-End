@@ -5,18 +5,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.cognixia.jump.filter.JwtRequestFilter;
 import com.cognixia.jump.service.MyUserDetailsService;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -24,8 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	MyUserDetailsService myUserDetailsService;
 	
-	//@Autowired
-	//private JwtRequestFilter jwtRequestFilter;
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,40 +36,50 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
 		http.csrf().disable()
-			.authorizeRequests()
-			.antMatchers("/api/users").permitAll()
-			.antMatchers(HttpMethod.GET, "/api/car").permitAll()
-			.antMatchers(HttpMethod.POST, "/api/add/user").permitAll()
-			.antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
-			.antMatchers(HttpMethod.GET, "/api/car/**").hasRole("ADMIN")
-			.antMatchers("/**").hasRole("ADMIN")
-			.anyRequest().authenticated()
-			.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				.authorizeRequests()
+				
+				
+				//.antMatchers("/authenticate").permitAll()
+				//.antMatchers(HttpMethod.GET, "/hello").permitAll()
+				//.antMatchers("/**").hasRole("ADMIN")
+				
+				.antMatchers("/api/add/user").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/hello").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/add/user").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/user/**").hasRole("ADMIN")
+				.antMatchers("/**").hasRole("ADMIN")
+				
+				
+				.anyRequest().authenticated()
+				.and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+	}	
+	@Override
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception{
 		
-//		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-			
+		return super.authenticationManagerBean();
+		
 	}
 	
-	// Spring Security is looking for available beans and uses PasswordEncoder for password encoding
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	
 	
 //	@Bean
 //	public PasswordEncoder passwordEncoder() {
-//		return NoOpPasswordEncoder.getInstance();
+//		return new BCryptPasswordEncoder();
 //	}
 	
-	@Override
+	
+	
+	// This is here for developing purposes, until password encoder has been developed
 	@Bean
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
+	public PasswordEncoder passwordEncoder() {
+		
+		return NoOpPasswordEncoder.getInstance();
 	}
 	
-
+	
 }
