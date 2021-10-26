@@ -54,24 +54,9 @@ public User updateUsername(long id, String username) throws Exception {
 		return updated;
 	}
 	
-	throw new Exception("Username with id: " + id + " can not be found.");
+	throw new Exception("Username with id: " + id + " could not be found.");
 }
 
-public User updateEmail(long id, String email) throws Exception {
-	Optional <User> found = userRepo.findById(id);
-	
-	if(found.isPresent()) {
-		User toUpdate = found.get();
-		
-		toUpdate.setEmail(email);
-		
-		User updated = userRepo.save(toUpdate);
-		
-		return updated;
-	}
-	
-	throw new Exception("Username with id: " + id + " can not be found.");
-}
 
 	
 

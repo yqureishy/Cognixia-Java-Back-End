@@ -46,15 +46,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				
 
 				
-				
+				.antMatchers(HttpMethod.POST, "/api/add/review/**").authenticated()
 				.antMatchers(HttpMethod.POST, "/api/add/restaurant").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/restaurant/delete/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.PATCH, "/api/restaurant/update/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/remove/user/**").hasRole("ADMIN")
 				.antMatchers(HttpMethod.DELETE, "/api/delete/review/*").hasRole("ADMIN")
 				.antMatchers(HttpMethod.GET, "/api/user").hasRole("ADMIN")
-				.antMatchers(HttpMethod.GET, "/user/current").authenticated()
-				.antMatchers(HttpMethod.POST, "/api/add/review/*").authenticated()
+				.antMatchers(HttpMethod.POST, "/api/add/review/**").authenticated()
 				.antMatchers("/**").permitAll()
 //				.anyRequest().authenticated()
 				
@@ -79,19 +78,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	
 	
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 	
 	
 	
 	// This is here for developing purposes, until password encoder has been developed
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		
-		return NoOpPasswordEncoder.getInstance();
-	}
+//	@Bean
+//	public PasswordEncoder passwordEncoder() {
+//		
+//		return NoOpPasswordEncoder.getInstance();
+//	}
 	
 	
 }

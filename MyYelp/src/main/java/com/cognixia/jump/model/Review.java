@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Review implements Serializable{
@@ -33,12 +34,10 @@ public class Review implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	@JsonBackReference     ///new
 	private User user;
 	
 	@ManyToOne
 	@JoinColumn(name = "restaurant_id", referencedColumnName = "id")
-	@JsonBackReference     ///new
 	private Restaurant restaurant;
 
 	public Review(Long id, String title, String body, Double rating, User user, Restaurant restaurant) {

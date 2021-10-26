@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -42,6 +43,9 @@ public class UserController {
 
 	@Autowired
 	private JwtUtil jwtTokenUtil;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Autowired
 	UserRepository userRepo;
@@ -71,7 +75,7 @@ public class UserController {
 
 		userService.createNewUser(registeringUser);
 
-		return ResponseEntity.ok(registeringUser.getUsername() + "has been added!");
+		return ResponseEntity.ok(registeringUser.getUsername() + " has been added!");
 
 	}
 
@@ -82,7 +86,7 @@ public class UserController {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException e) {
-			throw new Exception("Incorrect ussername or password", e);
+			throw new Exception("Incorrect username or password", e);
 		}
 
 		final UserDetails userDetails = UserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
@@ -159,13 +163,13 @@ public class UserController {
 			if(userRepo.existsById(id)) {
 				String oldPassword = userRepo.getById(id).getPassword();
 				
-				userRepo.updatePassword(password, id);
+				userRepo.updatePassword(passwordEncoder.encode(password), id);
 				
 				return ResponseEntity.status(200)
-						.body("Old Password: " + oldPassword + ", New Password: " + password);
+						.body("Your New Password is: " + password);
 			}
 			
-			throw new ResourceNotFoundException("Email already exists, please choose another email.");
+			throw new Exception();
 			
 		}
 
